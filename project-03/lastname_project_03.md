@@ -29,10 +29,10 @@ sample_n(weather_tpa, 4)
 ## # A tibble: 4 × 7
 ##    year month   day precipitation max_temp min_temp ave_temp
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl>
-## 1  2022    12     9          0          79       63     71  
-## 2  2022     3    20          0          84       65     74.5
-## 3  2022     1    16          0.68       71       62     66.5
-## 4  2022    11    30          0.04       82       67     74.5
+## 1  2022    10    16       0             90       71     80.5
+## 2  2022     7    21       0             93       80     86.5
+## 3  2022     9    26       0.00001       93       76     84.5
+## 4  2022     2     3       0             85       66     75.5
 ```
 
 See https://www.reisanar.com/slides/relationships-models#10 for a reminder on how to use this type of dataset with the `lubridate` package for dates and times (example included in the slides uses data from 2016).
@@ -56,11 +56,11 @@ tpa_month %>% sample_n(3)
 
 ```
 ## # A tibble: 3 × 8
-##    year month   day precipitation max_temp min_temp ave_temp Month    
-##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>    
-## 1  2022     5    29          0          92       72     82   May      
-## 2  2022     9    27          0.08       84       76     80   September
-## 3  2022     1    14          0          72       55     63.5 January
+##    year month   day precipitation max_temp min_temp ave_temp Month  
+##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>  
+## 1  2022    10    22       0             82       55     68.5 October
+## 2  2022     7    12       0             93       82     87.5 July   
+## 3  2022     8     5       0.00001       96       78     87   August
 ```
 
 
@@ -124,6 +124,24 @@ weather_tpa %>%
 Hint: default options for `geom_density()` were used. 
 
 
+```r
+theme_set(theme_bw())
+
+tpa_month %>%
+  ggplot() +
+  geom_density(aes(x = max_temp, fill = Month),
+               alpha = 0.6, size = 1) +
+  facet_wrap(vars(Month)) +
+  labs(x = "Maximum temperatures") +
+  theme(legend.position = "none",
+        strip.text.x = element_text(size = 15),
+        axis.text.x = element_text(size = 12),
+        axis.title.x = element_text(size = 15),
+        axis.text.y = element_text(size = 12),
+        axis.title.y = element_blank())
+```
+
+<img src="lastname_project_03_files/figure-html/density-monthly-1.png" width="80%" style="display: block; margin: auto;" />
 
 
 (d) Generate a plot like the chart below:
