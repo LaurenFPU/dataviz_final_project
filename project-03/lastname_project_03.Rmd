@@ -44,7 +44,7 @@ tpa_month <- weather_tpa %>%
 tpa_month %>% sample_n(3)
 ```
 
-```{r tpa_month_hist}
+```{r tpa_month_hist, out.width="80%", fig.align='center'}
 theme_set(theme_bw())
 
 tpa_month %>%
@@ -56,7 +56,11 @@ tpa_month %>%
   facet_wrap(vars(Month)) +
   labs(x = "Maximum temperatures",
        y = "Number of Days") +
-  theme(legend.position = "none")
+  theme(legend.position = "none",
+        strip.text.x = element_text(size = 15),
+        axis.title.x = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        axis.text.y = element_text(size = 15))
 ```
 
 
@@ -68,6 +72,20 @@ knitr::include_graphics("https://github.com/reisanar/figs/raw/master/tpa_max_tem
 
 Hint: check the `kernel` parameter of the `geom_density()` function, and use `bw = 0.5`.
 
+```{r density-plot, out.width="80%", fig.align='center'}
+theme_set(theme_minimal())
+
+weather_tpa %>%
+  ggplot() +
+  geom_density(aes(x = max_temp), 
+               kernel = "optcosin", bw = 0.5, 
+               fill = "grey50", size = 1) +
+  labs(x = "Maximum temperature") +
+  theme(axis.title.x = element_text(size = 15),
+        axis.title.y = element_text(size = 15))
+```
+
+
 (c) Create a plot like the one below:
 
 ```{r, echo = FALSE, out.width="80%", fig.align='center'}
@@ -75,6 +93,11 @@ knitr::include_graphics("https://github.com/reisanar/figs/raw/master/tpa_max_tem
 ```
 
 Hint: default options for `geom_density()` were used. 
+
+```{r}
+
+```
+
 
 (d) Generate a plot like the chart below:
 

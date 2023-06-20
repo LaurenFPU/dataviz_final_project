@@ -29,10 +29,10 @@ sample_n(weather_tpa, 4)
 ## # A tibble: 4 × 7
 ##    year month   day precipitation max_temp min_temp ave_temp
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl>
-## 1  2022     6    18          0          98       81     89.5
-## 2  2022     4     3          0          80       68     74  
-## 3  2022    12    20          0.11       67       58     62.5
-## 4  2022     5    22          0          96       74     85
+## 1  2022    12     9          0          79       63     71  
+## 2  2022     3    20          0          84       65     74.5
+## 3  2022     1    16          0.68       71       62     66.5
+## 4  2022    11    30          0.04       82       67     74.5
 ```
 
 See https://www.reisanar.com/slides/relationships-models#10 for a reminder on how to use this type of dataset with the `lubridate` package for dates and times (example included in the slides uses data from 2016).
@@ -45,17 +45,86 @@ Using the 2022 data:
 
 Hint: the option `binwidth = 3` was used with the `geom_histogram()` function.
 
+
+```r
+# prepare data for histogram
+tpa_month <- weather_tpa %>%
+  mutate(Month = lubridate::month(month, label = TRUE, abb = FALSE))
+
+tpa_month %>% sample_n(3)
+```
+
+```
+## # A tibble: 3 × 8
+##    year month   day precipitation max_temp min_temp ave_temp Month    
+##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>    
+## 1  2022     5    29          0          92       72     82   May      
+## 2  2022     9    27          0.08       84       76     80   September
+## 3  2022     1    14          0          72       55     63.5 January
+```
+
+
+```r
+theme_set(theme_bw())
+
+tpa_month %>%
+  ggplot() +
+  geom_histogram(aes(x = max_temp, fill = month), 
+                 binwidth = 3, 
+                 color = "white") +
+  scale_fill_viridis_c() +
+  facet_wrap(vars(Month)) +
+  labs(x = "Maximum temperatures",
+       y = "Number of Days") +
+  theme(legend.position = "none",
+        strip.text.x = element_text(size = 15),
+        axis.title.x = element_text(size = 15),
+        axis.title.y = element_text(size = 15),
+        axis.text.y = element_text(size = 15))
+```
+
+<img src="lastname_project_03_files/figure-html/tpa_month_hist-1.png" width="80%" style="display: block; margin: auto;" />
+
+
 (b) Create a plot like the one below:
 
 <img src="https://github.com/reisanar/figs/raw/master/tpa_max_temps_density.png" width="80%" style="display: block; margin: auto;" />
 
 Hint: check the `kernel` parameter of the `geom_density()` function, and use `bw = 0.5`.
 
+
+```r
+theme_set(theme_minimal())
+
+weather_tpa %>%
+  ggplot() +
+  geom_density(aes(x = max_temp), 
+               kernel = "optcosin", bw = 0.5, 
+               fill = "grey50", size = 1) +
+  labs(x = "Maximum temperature") +
+  theme(axis.title.x = element_text(size = 15),
+        axis.title.y = element_text(size = 15))
+```
+
+```
+## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+## ℹ Please use `linewidth` instead.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+<img src="lastname_project_03_files/figure-html/density-plot-1.png" width="80%" style="display: block; margin: auto;" />
+
+
 (c) Create a plot like the one below:
 
 <img src="https://github.com/reisanar/figs/raw/master/tpa_max_temps_density_facet.png" width="80%" style="display: block; margin: auto;" />
 
 Hint: default options for `geom_density()` were used. 
+
+
+
 
 (d) Generate a plot like the chart below:
 
