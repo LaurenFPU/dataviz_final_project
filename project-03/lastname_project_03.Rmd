@@ -36,6 +36,30 @@ knitr::include_graphics("https://github.com/reisanar/figs/raw/master/tpa_max_tem
 
 Hint: the option `binwidth = 3` was used with the `geom_histogram()` function.
 
+```{r tpa_month}
+# prepare data for histogram
+tpa_month <- weather_tpa %>%
+  mutate(Month = lubridate::month(month, label = TRUE, abb = FALSE))
+
+tpa_month %>% sample_n(3)
+```
+
+```{r tpa_month_hist}
+theme_set(theme_bw())
+
+tpa_month %>%
+  ggplot() +
+  geom_histogram(aes(x = max_temp, fill = month), 
+                 binwidth = 3, 
+                 color = "white") +
+  scale_fill_viridis_c() +
+  facet_wrap(vars(Month)) +
+  labs(x = "Maximum temperatures",
+       y = "Number of Days") +
+  theme(legend.position = "none")
+```
+
+
 (b) Create a plot like the one below:
 
 ```{r, echo = FALSE, out.width="80%", fig.align='center'}
