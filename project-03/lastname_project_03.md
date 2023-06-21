@@ -29,10 +29,10 @@ sample_n(weather_tpa, 4)
 ## # A tibble: 4 × 7
 ##    year month   day precipitation max_temp min_temp ave_temp
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl>
-## 1  2022     1    27             0       74       59     66.5
-## 2  2022     3    21             0       85       57     71  
-## 3  2022     2    14             0       68       46     57  
-## 4  2022     1    11             0       73       54     63.5
+## 1  2022     4     3          0          80       68     74  
+## 2  2022     7    22          1.64       95       77     86  
+## 3  2022     4    22          0          87       67     77  
+## 4  2022    10    28          0.71       87       72     79.5
 ```
 
 See https://www.reisanar.com/slides/relationships-models#10 for a reminder on how to use this type of dataset with the `lubridate` package for dates and times (example included in the slides uses data from 2016).
@@ -58,9 +58,9 @@ tpa_month %>% sample_n(3)
 ## # A tibble: 3 × 8
 ##    year month   day precipitation max_temp min_temp ave_temp Month   
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>   
-## 1  2022    10     6       0             84       67     75.5 October 
-## 2  2022    11    21       0.00001       79       54     66.5 November
-## 3  2022     7     5       0.01          94       81     87.5 July
+## 1  2022     2     6          0.02       64       54     59   February
+## 2  2022     4    19          0          84       66     75   April   
+## 3  2022    12    12          0          76       59     67.5 December
 ```
 
 
@@ -82,7 +82,8 @@ tpa_month %>%
         axis.title.x = element_text(size = 15),
         axis.title.y = element_text(size = 15),
         axis.text.y = element_text(size = 13),
-        axis.text.x = element_text(size = 13))
+        axis.text.x = element_text(size = 13),
+        panel.grid = element_line(linewidth = 1))
 ```
 
 <img src="lastname_project_03_files/figure-html/tpa_month_hist-1.png" width="80%" style="display: block; margin: auto;" />
@@ -105,7 +106,8 @@ weather_tpa %>%
                fill = "grey50", size = 1) +
   labs(x = "Maximum temperature") +
   theme(axis.title.x = element_text(size = 15),
-        axis.title.y = element_text(size = 15))
+        axis.title.y = element_text(size = 15),
+        panel.grid = element_line(linewidth = 1))
 ```
 
 ```
@@ -143,7 +145,8 @@ tpa_month %>%
         axis.text.x = element_text(size = 14),
         axis.title.x = element_text(size = 15),
         axis.text.y = element_text(size = 13),
-        axis.title.y = element_blank())
+        axis.title.y = element_blank(),
+        panel.grid = element_line(linewidth = 1))
 ```
 
 <img src="lastname_project_03_files/figure-html/density-monthly-1.png" width="80%" style="display: block; margin: auto;" />
@@ -181,7 +184,8 @@ tpa_month %>%
   theme(axis.title.x = element_text(size = 17),
         axis.text.y = element_text(size = 13),
         axis.text.x = element_text(size = 13),
-        legend.text = element_text(size = 13))
+        legend.text = element_text(size = 13),
+        panel.grid = element_line(linewidth = 1))
 ```
 
 ```
@@ -201,6 +205,120 @@ tpa_month %>%
 
 
 (e) Create a plot of your choice that uses the attribute for precipitation _(values of -99.9 for temperature or -99.99 for precipitation represent missing data)_.
+
+
+
+```r
+library(scales)
+```
+
+```
+## 
+## Attaching package: 'scales'
+```
+
+```
+## The following object is masked from 'package:purrr':
+## 
+##     discard
+```
+
+```
+## The following object is masked from 'package:readr':
+## 
+##     col_factor
+```
+
+
+
+```r
+tpa_month %>%
+  summarize_all(range) # obs: no -99.99 missing values
+```
+
+```
+## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
+## dplyr 1.1.0.
+## ℹ Please use `reframe()` instead.
+## ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
+##   always returns an ungrouped data frame and adjust accordingly.
+## ℹ The deprecated feature was likely used in the dplyr package.
+##   Please report the issue at <https://github.com/tidyverse/dplyr/issues>.
+## This warning is displayed once every 8 hours.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.
+```
+
+```
+## # A tibble: 2 × 8
+##    year month   day precipitation max_temp min_temp ave_temp Month   
+##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>   
+## 1  2022     1     1          0          45       31     38   January 
+## 2  2022    12    31          2.86       98       83     89.5 December
+```
+
+
+
+
+```r
+tpa_doy <- weather_tpa %>% 
+  unite("doy", year, month, day, sep = "-") %>% 
+  mutate(doy = ymd(doy))
+
+tpa_doy %>% sample_n(5)
+```
+
+```
+## # A tibble: 5 × 5
+##   doy        precipitation max_temp min_temp ave_temp
+##   <date>             <dbl>    <dbl>    <dbl>    <dbl>
+## 1 2022-12-09       0             79       63       71
+## 2 2022-06-03       0.00001       86       76       81
+## 3 2022-09-23       1.07          93       77       85
+## 4 2022-10-30       0             87       71       79
+## 5 2022-05-21       0.00001       90       74       82
+```
+
+
+
+
+```r
+tpa_monthly_precip <- tpa_month %>%
+  group_by(Month) %>%
+  summarize(tot_precip = sum(precipitation))
+```
+
+
+
+```r
+theme_set(theme_minimal())
+
+ggplot() +
+  geom_bar(data = tpa_monthly_precip, 
+           aes(x = Month, y = tot_precip, fill = tot_precip),
+           stat = "identity", alpha = 0.6) +
+  geom_jitter(data = tpa_month,
+              aes(x = Month, y = precipitation), alpha = 0.6) +
+  coord_flip() +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(breaks = seq(0, 12, 2)) +
+  labs(title = "Tampa 2022 - monthly precipitation",
+       subtitle = "(points = daily precipitation, bars = monthly total)",
+       caption = "data source: https://climatecenter.fsu.edu/climate-data-access-tools/downloadable-data",
+       x = element_blank(),
+       y = "precipitation (inches)") +
+  guides(fill = "none") +
+  theme(plot.title.position = "plot",
+        plot.title = element_text(size = 15),
+        plot.subtitle = element_text(size = 13),
+        axis.title.x = element_text(size = 13),
+        axis.text.x = element_text(size = 13), 
+        axis.text.y = element_text(size = 13),
+        panel.grid = element_line(linewidth = 0.25))
+```
+
+<img src="lastname_project_03_files/figure-html/monthly-precipitation-1.png" width="80%" style="display: block; margin: auto;" />
+
 
 
 

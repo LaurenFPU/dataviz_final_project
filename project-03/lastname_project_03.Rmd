@@ -62,7 +62,8 @@ tpa_month %>%
         axis.title.x = element_text(size = 15),
         axis.title.y = element_text(size = 15),
         axis.text.y = element_text(size = 13),
-        axis.text.x = element_text(size = 13))
+        axis.text.x = element_text(size = 13),
+        panel.grid = element_line(linewidth = 1))
 ```
 
 
@@ -84,7 +85,8 @@ weather_tpa %>%
                fill = "grey50", size = 1) +
   labs(x = "Maximum temperature") +
   theme(axis.title.x = element_text(size = 15),
-        axis.title.y = element_text(size = 15))
+        axis.title.y = element_text(size = 15),
+        panel.grid = element_line(linewidth = 1))
 ```
 
 
@@ -113,7 +115,8 @@ tpa_month %>%
         axis.text.x = element_text(size = 14),
         axis.title.x = element_text(size = 15),
         axis.text.y = element_text(size = 13),
-        axis.title.y = element_blank())
+        axis.title.y = element_blank(),
+        panel.grid = element_line(linewidth = 1))
   
 ```
 
@@ -144,12 +147,71 @@ tpa_month %>%
   theme(axis.title.x = element_text(size = 17),
         axis.text.y = element_text(size = 13),
         axis.text.x = element_text(size = 13),
-        legend.text = element_text(size = 13))
+        legend.text = element_text(size = 13),
+        panel.grid = element_line(linewidth = 1))
 ```
 
 
 
 (e) Create a plot of your choice that uses the attribute for precipitation _(values of -99.9 for temperature or -99.99 for precipitation represent missing data)_.
+
+
+```{r load-scales}
+library(scales)
+```
+
+
+```{r no-missing-values}
+tpa_month %>%
+  summarize_all(range) # obs: no -99.99 missing values
+```
+
+
+
+```{r tpa-doy}
+tpa_doy <- weather_tpa %>% 
+  unite("doy", year, month, day, sep = "-") %>% 
+  mutate(doy = ymd(doy))
+
+tpa_doy %>% sample_n(5)
+```
+
+
+
+```{r tpa-monthly-precip}
+tpa_monthly_precip <- tpa_month %>%
+  group_by(Month) %>%
+  summarize(tot_precip = sum(precipitation))
+```
+
+
+```{r monthly-precipitation, out.width="80%", fig.align='center', fig.asp=0.60, dpi=300}
+theme_set(theme_minimal())
+
+ggplot() +
+  geom_bar(data = tpa_monthly_precip, 
+           aes(x = Month, y = tot_precip, fill = tot_precip),
+           stat = "identity", alpha = 0.6) +
+  geom_jitter(data = tpa_month,
+              aes(x = Month, y = precipitation), alpha = 0.6) +
+  coord_flip() +
+  scale_x_discrete(limits = rev) +
+  scale_y_continuous(breaks = seq(0, 12, 2)) +
+  labs(title = "Tampa 2022 - monthly precipitation",
+       subtitle = "(points = daily precipitation, bars = monthly total)",
+       caption = "data source: https://climatecenter.fsu.edu/climate-data-access-tools/downloadable-data",
+       x = element_blank(),
+       y = "precipitation (inches)") +
+  guides(fill = "none") +
+  theme(plot.title.position = "plot",
+        plot.title = element_text(size = 15),
+        plot.subtitle = element_text(size = 13),
+        axis.title.x = element_text(size = 13),
+        axis.text.x = element_text(size = 13), 
+        axis.text.y = element_text(size = 13),
+        panel.grid = element_line(linewidth = 0.25))
+```
+
 
 
 
