@@ -74,7 +74,7 @@ knitr::include_graphics("https://github.com/reisanar/figs/raw/master/tpa_max_tem
 
 Hint: check the `kernel` parameter of the `geom_density()` function, and use `bw = 0.5`.
 
-```{r density-plot, out.width="80%", fig.align='center'}
+```{r density-plot, out.width="80%", fig.align='center', fig.asp=0.6, dpi=300}
 theme_set(theme_minimal())
 
 weather_tpa %>%
@@ -96,20 +96,23 @@ knitr::include_graphics("https://github.com/reisanar/figs/raw/master/tpa_max_tem
 
 Hint: default options for `geom_density()` were used. 
 
-```{r density-monthly, out.width="80%", fig.align='center'}
+```{r density-monthly, out.width="80%", fig.align='center', fig.asp=0.60, dpi=300}
 theme_set(theme_bw())
 
 tpa_month %>%
   ggplot() +
   geom_density(aes(x = max_temp, fill = Month),
                alpha = 0.6, size = 1) +
+  scale_y_continuous(breaks = seq(0,0.30,0.1)) +
   facet_wrap(vars(Month)) +
-  labs(x = "Maximum temperatures") +
+  labs(title = "Density plots for each month in 2022",
+       x = "Maximum temperatures") +
   theme(legend.position = "none",
+        plot.title = element_text(size = 20),
         strip.text.x = element_text(size = 15),
-        axis.text.x = element_text(size = 12),
+        axis.text.x = element_text(size = 14),
         axis.title.x = element_text(size = 15),
-        axis.text.y = element_text(size = 12),
+        axis.text.y = element_text(size = 13),
         axis.title.y = element_blank())
   
 ```
@@ -123,6 +126,27 @@ knitr::include_graphics("https://github.com/reisanar/figs/raw/master/tpa_max_tem
 ```
 
 Hint: use the`{ggridges}` package, and the `geom_density_ridges()` function paying close attention to the `quantile_lines` and `quantiles` parameters. The plot above uses the `plasma` option (color scale) for the _viridis_ palette.
+
+
+```{r ridges-monthly, out.width="80%", fig.align='center', fig.asp=0.60, dpi=300}
+theme_set(theme_minimal())
+
+library(ggridges)
+tpa_month %>%
+  ggplot(aes(x = max_temp, y = Month, fill = after_stat(x))) +
+  geom_density_ridges_gradient(quantile_lines = TRUE, quantiles = 2,
+                               size = 1) + # "deprecated" warning noted, but get "ignoring" warning using linewidth 
+  scale_fill_viridis_c(option = "C") +
+  scale_x_continuous(breaks = seq(40, 100, 10)) +
+  labs(x = "Maximum temperature (in Fahrenheit degrees)",
+       fill = element_blank(),
+       y = element_blank()) +
+  theme(axis.title.x = element_text(size = 17),
+        axis.text.y = element_text(size = 13),
+        axis.text.x = element_text(size = 13),
+        legend.text = element_text(size = 13))
+```
+
 
 
 (e) Create a plot of your choice that uses the attribute for precipitation _(values of -99.9 for temperature or -99.99 for precipitation represent missing data)_.
