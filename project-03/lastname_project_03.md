@@ -29,10 +29,10 @@ sample_n(weather_tpa, 4)
 ## # A tibble: 4 × 7
 ##    year month   day precipitation max_temp min_temp ave_temp
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl>
-## 1  2022    10    16       0             90       71     80.5
-## 2  2022     7    21       0             93       80     86.5
-## 3  2022     9    26       0.00001       93       76     84.5
-## 4  2022     2     3       0             85       66     75.5
+## 1  2022     5    20          0.17       88       75     81.5
+## 2  2022     7     8          0.19       94       79     86.5
+## 3  2022     5     8          0          89       75     82  
+## 4  2022     2    10          0          72       47     59.5
 ```
 
 See https://www.reisanar.com/slides/relationships-models#10 for a reminder on how to use this type of dataset with the `lubridate` package for dates and times (example included in the slides uses data from 2016).
@@ -56,11 +56,11 @@ tpa_month %>% sample_n(3)
 
 ```
 ## # A tibble: 3 × 8
-##    year month   day precipitation max_temp min_temp ave_temp Month  
-##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>  
-## 1  2022    10    22       0             82       55     68.5 October
-## 2  2022     7    12       0             93       82     87.5 July   
-## 3  2022     8     5       0.00001       96       78     87   August
+##    year month   day precipitation max_temp min_temp ave_temp Month   
+##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>   
+## 1  2022     7    14          2.08       92       73     82.5 July    
+## 2  2022    10     7          0          87       67     77   October 
+## 3  2022     2     6          0.02       64       54     59   February
 ```
 
 
@@ -73,14 +73,16 @@ tpa_month %>%
                  binwidth = 3, 
                  color = "white") +
   scale_fill_viridis_c() +
+#  scale_x_continuous(breaks = seq(50,100,10)) + # omitted-less cluttered w/o
   facet_wrap(vars(Month)) +
   labs(x = "Maximum temperatures",
        y = "Number of Days") +
   theme(legend.position = "none",
-        strip.text.x = element_text(size = 15),
+        strip.text.x = element_text(size = 13),
         axis.title.x = element_text(size = 15),
         axis.title.y = element_text(size = 15),
-        axis.text.y = element_text(size = 15))
+        axis.text.y = element_text(size = 13),
+        axis.text.x = element_text(size = 13))
 ```
 
 <img src="lastname_project_03_files/figure-html/tpa_month_hist-1.png" width="80%" style="display: block; margin: auto;" />

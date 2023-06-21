@@ -44,7 +44,7 @@ tpa_month <- weather_tpa %>%
 tpa_month %>% sample_n(3)
 ```
 
-```{r tpa_month_hist, out.width="80%", fig.align='center'}
+```{r tpa_month_hist, out.width="80%", fig.align='center', fig.asp=0.6, dpi=300}
 theme_set(theme_bw())
 
 tpa_month %>%
@@ -53,14 +53,16 @@ tpa_month %>%
                  binwidth = 3, 
                  color = "white") +
   scale_fill_viridis_c() +
+#  scale_x_continuous(breaks = seq(50,100,10)) + # omitted: less clutter by 20s
   facet_wrap(vars(Month)) +
   labs(x = "Maximum temperatures",
        y = "Number of Days") +
   theme(legend.position = "none",
-        strip.text.x = element_text(size = 15),
+        strip.text.x = element_text(size = 13),
         axis.title.x = element_text(size = 15),
         axis.title.y = element_text(size = 15),
-        axis.text.y = element_text(size = 15))
+        axis.text.y = element_text(size = 13),
+        axis.text.x = element_text(size = 13))
 ```
 
 
