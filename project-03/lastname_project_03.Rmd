@@ -86,6 +86,8 @@ weather_tpa %>%
   labs(x = "Maximum temperature") +
   theme(axis.title.x = element_text(size = 15),
         axis.title.y = element_text(size = 15),
+        axis.text.x = element_text(size = 13),
+        axis.text.y = element_text(size = 13),
         panel.grid = element_line(linewidth = 1))
 ```
 
@@ -276,11 +278,50 @@ new_concrete <- concrete %>%
 
 1. Explore the distribution of 2 of the continuous variables available in the dataset. Do ranges make sense? Comment on your findings.
 
+```{r sample-new-concrete}
+new_concrete %>% sample_n(5)
+```
+
+
+```{r new-concrete-ranges}
+new_concrete %>% 
+  select(-strength_range) %>% # remove categorical
+  summarize_all(~range(.))
+```
+
+```{r new-concrete-summary}
+new_concrete %>% summary()
+```
+
+```{r Fly-Ash-EDA-histogram}
+new_concrete %>%
+  ggplot(aes(x = Fly_Ash)) +
+  geom_histogram()
+```
+
+
+```{r Fly-Ash-zeros}
+(new_concrete %>% filter(Fly_Ash == 0) %>% nrow()) / nrow(new_concrete)
+# more than half of the Fly_Ash values are 0
+```
+
+
+```{r Age-EDA-histogram}
+new_concrete %>%
+  ggplot(aes(x = Age)) +
+  geom_histogram(binwidth = 5)
+```
+
+> When summarizing (`summary()`) the concrete data, it was observed that the 1st quartile for three attributes is 0: Blast_Furnace_Slag, Fly_Ash, Superplasticizer. The media for Fly_Ash is also 0. Therefore, Fly_Ash was chosen as one of the continuous variables to explore the distribution of, to try to make more sense of this initial observation. From the histogram and the calculation following it, it was found that more than 50% of the Fly_Ash values are 0. 
+
+> From the `summary()`, we can see that the Age ranges from 1 to 365 (year). Age was chosen as the second attribute to explore to see if the tested ages are evenly spaced throughout the year. From the histogram, it is clear that most of the testing happens within the first month of aging. 
+
 2. Use a _temporal_ indicator such as the one available in the variable `Age` (measured in days). Generate a plot similar to the one shown below. Comment on your results.
 
 ```{r, echo = FALSE, out.width="80%", fig.align='center'}
 knitr::include_graphics("https://github.com/reisanar/figs/raw/master/concrete_strength.png")
 ```
+
 
 
 3. Create a scatterplot similar to the one shown below. Pay special attention to which variables are being mapped to specific aesthetics of the plot. Comment on your results. 

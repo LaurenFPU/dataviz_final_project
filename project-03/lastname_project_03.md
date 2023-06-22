@@ -29,10 +29,10 @@ sample_n(weather_tpa, 4)
 ## # A tibble: 4 × 7
 ##    year month   day precipitation max_temp min_temp ave_temp
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl>
-## 1  2022     4     3          0          80       68     74  
-## 2  2022     7    22          1.64       95       77     86  
-## 3  2022     4    22          0          87       67     77  
-## 4  2022    10    28          0.71       87       72     79.5
+## 1  2022     6    27          1.28       93       76     84.5
+## 2  2022     7    31          0          97       81     89  
+## 3  2022     3     6          0          89       66     77.5
+## 4  2022     2     2          0          82       57     69.5
 ```
 
 See https://www.reisanar.com/slides/relationships-models#10 for a reminder on how to use this type of dataset with the `lubridate` package for dates and times (example included in the slides uses data from 2016).
@@ -58,9 +58,9 @@ tpa_month %>% sample_n(3)
 ## # A tibble: 3 × 8
 ##    year month   day precipitation max_temp min_temp ave_temp Month   
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>   
-## 1  2022     2     6          0.02       64       54     59   February
-## 2  2022     4    19          0          84       66     75   April   
-## 3  2022    12    12          0          76       59     67.5 December
+## 1  2022     6    12          0          90       77     83.5 June    
+## 2  2022     2    27          0          82       69     75.5 February
+## 3  2022     6    27          1.28       93       76     84.5 June
 ```
 
 
@@ -107,6 +107,8 @@ weather_tpa %>%
   labs(x = "Maximum temperature") +
   theme(axis.title.x = element_text(size = 15),
         axis.title.y = element_text(size = 15),
+        axis.text.x = element_text(size = 13),
+        axis.text.y = element_text(size = 13),
         panel.grid = element_line(linewidth = 1))
 ```
 
@@ -272,11 +274,11 @@ tpa_doy %>% sample_n(5)
 ## # A tibble: 5 × 5
 ##   doy        precipitation max_temp min_temp ave_temp
 ##   <date>             <dbl>    <dbl>    <dbl>    <dbl>
-## 1 2022-12-09       0             79       63       71
-## 2 2022-06-03       0.00001       86       76       81
-## 3 2022-09-23       1.07          93       77       85
-## 4 2022-10-30       0             87       71       79
-## 5 2022-05-21       0.00001       90       74       82
+## 1 2022-04-13          0          86       70     78  
+## 2 2022-05-25          0          95       77     86  
+## 3 2022-05-26          0          92       78     85  
+## 4 2022-08-19          0          92       76     84  
+## 5 2022-08-27          0.02       92       79     85.5
 ```
 
 
@@ -384,6 +386,41 @@ new_concrete <- concrete %>%
 
 
 1. Explore the distribution of 2 of the continuous variables available in the dataset. Do ranges make sense? Comment on your findings.
+
+
+```r
+new_concrete %>% sample_n(5)
+```
+
+```
+## # A tibble: 5 × 10
+##   Cement Blast_Furnace_Slag Fly_Ash Water Superplasticizer Coarse_Aggregate
+##    <dbl>              <dbl>   <dbl> <dbl>            <dbl>            <dbl>
+## 1   238.               159.     0    186.             0               1041.
+## 2   102                153      0    192              0                887 
+## 3   363.               189      0    165.            11.6              945.
+## 4   191.                 0    125.   162.             7.77            1090 
+## 5   290.                 0     96.2  168.             9.41             961.
+## # ℹ 4 more variables: Fine_Aggregate <dbl>, Age <dbl>,
+## #   Concrete_compressive_strength <dbl>, strength_range <fct>
+```
+
+
+
+```r
+new_concrete %>% select(-strength_range) %>% summarize_all(~range(.))
+```
+
+```
+## # A tibble: 2 × 9
+##   Cement Blast_Furnace_Slag Fly_Ash Water Superplasticizer Coarse_Aggregate
+##    <dbl>              <dbl>   <dbl> <dbl>            <dbl>            <dbl>
+## 1    102                 0       0   122.              0                801
+## 2    540               359.    200.  247              32.2             1145
+## # ℹ 3 more variables: Fine_Aggregate <dbl>, Age <dbl>,
+## #   Concrete_compressive_strength <dbl>
+```
+
 
 2. Use a _temporal_ indicator such as the one available in the variable `Age` (measured in days). Generate a plot similar to the one shown below. Comment on your results.
 
