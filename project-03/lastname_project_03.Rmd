@@ -256,6 +256,7 @@ new_concrete <- concrete %>%
 
 
 
+
 1. Explore the distribution of 2 of the continuous variables available in the dataset. Do ranges make sense? Comment on your findings.
 
 ```{r sample-new-concrete}
@@ -304,6 +305,61 @@ new_concrete %>%
 ```{r, echo = FALSE, out.width="80%", fig.align='center'}
 knitr::include_graphics("https://github.com/reisanar/figs/raw/master/concrete_strength.png")
 ```
+
+
+```{r newer-concrete}
+newer_concrete <- new_concrete %>%
+  mutate(cement_range = cut(Cement, 
+                            breaks = quantile(Cement, 
+                                              probs = seq(0, 1, 0.25))) ) %>%
+  filter(cement_range != "NA",
+         strength_range != "NA") # filter out NAs for cleaner legends in plots
+
+newer_concrete <- newer_concrete %>%
+  mutate(CementRange = paste0("Cement range: ", newer_concrete$cement_range, " kg")) # new column for plot facet header clarity
+  
+```
+
+
+
+```{r cement-range-counts}
+newer_concrete %>% group_by(CementRange) %>%
+  summarize(n())
+```
+
+
+
+
+```{r newer-concrete-head}
+head(newer_concrete)
+```
+
+
+```{r age-strength-cement-boxplot, out.width="95%", fig.align='center', fig.asp=1, dpi=300}
+library(viridis)
+
+theme_set(theme_minimal())
+
+newer_concrete %>%
+  filter(cement_range != "NA") %>%
+  ggplot(aes(x = as.factor(Age), y = Concrete_compressive_strength,
+             fill = strength_range)) +
+  geom_boxplot() +
+  facet_wrap(vars(CementRange)) +
+  scale_fill_viridis_d(option = "plasma") +
+  coord_flip() +
+  scale_x_discrete(limits = rev) +
+  labs(title = "Concrete Compressive Strength versus Age",
+       subtitle = "faceted by Cement content", 
+       caption = "Source: https://archive.ics.uci.edu/ml/index.php",
+       y = "Compressive Strength (MPa)",
+       x = "Age (days)",
+       fill = "Strength Range (MPa)") +
+  theme(plot.title.position = "plot",
+        legend.position = "bottom")
+```
+> ***Observations:***
+For all of the facets (all cement contents), greater age is generally associated with stronger concrete; however, there are diminishing returns that level off after the first couple months of aging. While it is redundant to color code the compressive strength ranges, this makes it easier to see that larger amounts of cement appear to be associated with greater compressive strengths overall. The highest compressive strengths are seen in the bottom right facet, for which the cement content is the highest. After three months of aging, all boxplots for this cement range show compressive strengths above 40 MPa.
 
 
 

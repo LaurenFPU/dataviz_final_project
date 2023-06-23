@@ -29,10 +29,10 @@ sample_n(weather_tpa, 4)
 ## # A tibble: 4 × 7
 ##    year month   day precipitation max_temp min_temp ave_temp
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl>
-## 1  2022     2     3             0       85       66     75.5
-## 2  2022     2    21             0       86       63     74.5
-## 3  2022    10     3             0       84       66     75  
-## 4  2022     3    28             0       83       67     75
+## 1  2022     1    16          0.68       71       62     66.5
+## 2  2022     6    28          0.09       95       77     86  
+## 3  2022     9    10          1.09       87       76     81.5
+## 4  2022     1     1          0          82       67     74.5
 ```
 
 See https://www.reisanar.com/slides/relationships-models#10 for a reminder on how to use this type of dataset with the `lubridate` package for dates and times (example included in the slides uses data from 2016).
@@ -56,11 +56,11 @@ tpa_month %>% sample_n(3)
 
 ```
 ## # A tibble: 3 × 8
-##    year month   day precipitation max_temp min_temp ave_temp Month    
-##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>    
-## 1  2022     9    11          0.02       90       77     83.5 September
-## 2  2022     4    16          0          88       73     80.5 April    
-## 3  2022    12    24          0          45       31     38   December
+##    year month   day precipitation max_temp min_temp ave_temp Month 
+##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord> 
+## 1  2022     7    29          0          97       82     89.5 July  
+## 2  2022     7     9          0          92       81     86.5 July  
+## 3  2022     8     4          1.24       95       76     85.5 August
 ```
 
 
@@ -274,11 +274,11 @@ tpa_doy %>% sample_n(5)
 ## # A tibble: 5 × 5
 ##   doy        precipitation max_temp min_temp ave_temp
 ##   <date>             <dbl>    <dbl>    <dbl>    <dbl>
-## 1 2022-08-14       0.00001       87       80     83.5
-## 2 2022-07-15       0             93       74     83.5
-## 3 2022-11-29       0             83       61     72  
-## 4 2022-06-15       0.11          95       78     86.5
-## 5 2022-10-10       0.00001       90       74     82
+## 1 2022-03-02          0          78       58     68  
+## 2 2022-04-11          0          85       62     73.5
+## 3 2022-11-19          0          75       53     64  
+## 4 2022-03-15          1.04       84       67     75.5
+## 5 2022-05-12          0          87       66     76.5
 ```
 
 
@@ -365,6 +365,7 @@ new_concrete <- concrete %>%
 
 
 
+
 1. Explore the distribution of 2 of the continuous variables available in the dataset. Do ranges make sense? Comment on your findings.
 
 
@@ -376,11 +377,11 @@ new_concrete %>% sample_n(5)
 ## # A tibble: 5 × 10
 ##   Cement Blast_Furnace_Slag Fly_Ash Water Superplasticizer Coarse_Aggregate
 ##    <dbl>              <dbl>   <dbl> <dbl>            <dbl>            <dbl>
-## 1   182.               45.2    122.  170.             8.19            1059.
-## 2   284               120.       0   168.             7.2              970.
-## 3   439               177        0   186             11.1              885.
-## 4   213.                0      100.  159.             8.71            1008.
-## 5   446                24       79   162             11.6              967 
+## 1   238.              238.      0    228              0                932 
+## 2   250                 0      95.7  192.             5.33             949.
+## 3   428.               47.5     0    228              0                932 
+## 4   255                 0       0    192              0                890.
+## 5   475                 0       0    228              0                932 
 ## # ℹ 4 more variables: Fine_Aggregate <dbl>, Age <dbl>,
 ## #   Concrete_compressive_strength <dbl>, strength_range <fct>
 ```
@@ -479,6 +480,108 @@ new_concrete %>%
 2. Use a _temporal_ indicator such as the one available in the variable `Age` (measured in days). Generate a plot similar to the one shown below. Comment on your results.
 
 <img src="https://github.com/reisanar/figs/raw/master/concrete_strength.png" width="80%" style="display: block; margin: auto;" />
+
+
+
+```r
+newer_concrete <- new_concrete %>%
+  mutate(cement_range = cut(Cement, 
+                            breaks = quantile(Cement, 
+                                              probs = seq(0, 1, 0.25))) ) %>%
+  filter(cement_range != "NA",
+         strength_range != "NA") # filter out NAs for cleaner legends in plots
+
+newer_concrete <- newer_concrete %>%
+  mutate(CementRange = paste0("Cement range: ", newer_concrete$cement_range, " kg")) # new column for plot facet header clarity
+```
+
+
+
+
+```r
+newer_concrete %>% group_by(CementRange) %>%
+  summarize(n())
+```
+
+```
+## # A tibble: 4 × 2
+##   CementRange                `n()`
+##   <chr>                      <int>
+## 1 Cement range: (102,192] kg   253
+## 2 Cement range: (192,273] kg   257
+## 3 Cement range: (273,350] kg   259
+## 4 Cement range: (350,540] kg   256
+```
+
+
+
+
+
+```r
+head(newer_concrete)
+```
+
+```
+## # A tibble: 6 × 12
+##   Cement Blast_Furnace_Slag Fly_Ash Water Superplasticizer Coarse_Aggregate
+##    <dbl>              <dbl>   <dbl> <dbl>            <dbl>            <dbl>
+## 1   540                  0        0   162              2.5            1040 
+## 2   540                  0        0   162              2.5            1055 
+## 3   332.               142.       0   228              0               932 
+## 4   332.               142.       0   228              0               932 
+## 5   199.               132.       0   192              0               978.
+## 6   266                114        0   228              0               932 
+## # ℹ 6 more variables: Fine_Aggregate <dbl>, Age <dbl>,
+## #   Concrete_compressive_strength <dbl>, strength_range <fct>,
+## #   cement_range <fct>, CementRange <chr>
+```
+
+
+
+```r
+library(viridis)
+```
+
+```
+## Loading required package: viridisLite
+```
+
+```
+## 
+## Attaching package: 'viridis'
+```
+
+```
+## The following object is masked from 'package:scales':
+## 
+##     viridis_pal
+```
+
+```r
+theme_set(theme_minimal())
+
+newer_concrete %>%
+  filter(cement_range != "NA") %>%
+  ggplot(aes(x = as.factor(Age), y = Concrete_compressive_strength,
+             fill = strength_range)) +
+  geom_boxplot() +
+  facet_wrap(vars(CementRange)) +
+  scale_fill_viridis_d(option = "plasma") +
+  coord_flip() +
+  scale_x_discrete(limits = rev) +
+  labs(title = "Concrete Compressive Strength versus Age",
+       subtitle = "faceted by Cement content", 
+       caption = "Source: https://archive.ics.uci.edu/ml/index.php",
+       y = "Compressive Strength (MPa)",
+       x = "Age (days)",
+       fill = "Strength Range (MPa)") +
+  theme(plot.title.position = "plot",
+        legend.position = "bottom")
+```
+
+<img src="lastname_project_03_files/figure-html/age-strength-cement-boxplot-1.png" width="95%" style="display: block; margin: auto;" />
+> ***Observations:***
+For all of the facets (all cement contents), greater age is generally associated with stronger concrete; however, there are diminishing returns that level off after the first couple months of aging. While it is redundant to color code the compressive strength ranges, this makes it easier to see that larger amounts of cement appear to be associated with greater compressive strengths overall. The highest compressive strengths are seen in the bottom right facet, for which the cement content is the highest. After three months of aging, all boxplots for this cement range show compressive strengths above 40 MPa.
 
 
 
