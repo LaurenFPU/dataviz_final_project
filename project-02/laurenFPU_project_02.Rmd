@@ -23,14 +23,8 @@ The Statlog dataset was originally accessed through the [UCI repository](https:/
 
 ### ***an interactive plot***
 
-The below plot is static and has been reduced in size. For a larger and interactive version, click [here](FL_pests_interactive.html). 
+The below plot is static and has been reduced in size. For a larger and interactive version, scroll down.
 
-```{r}
-FL_pests_interactive
-```
-
-
-> Note: The above link works offline but does not render correctly in GitHub. 
 
 ```{r project-2-setup, echo=FALSE, message=FALSE}
 # load packages
@@ -129,6 +123,13 @@ FL_pests_interactive <- FL_small_pests_plotly %>% ggplotly(autosize = F, width =
 
 ![](FL_pest_interactive.png){width=675px, height=600px}
 
+```{r}
+FL_pests_interactive
+```
+
+
+> Note: The interactivity for the above plot works offline but does not render correctly in GitHub. 
+
 The above plot shows the estimated total pesticide use by Florida counties in 2015. The top 20 counties are in red and the bottom in blue. Unsurprisingly, highly agricultural counties use more pesticides than others. This was confirmed by referencing the 2017 agricultural market values from the [Florida Department of Agriculture and Consumer Services](https://www.fdacs.gov/Agriculture-Industry/Florida-Agriculture-Overview-and-Statistics).
 
 ### ***a spatial visualization***
@@ -175,6 +176,13 @@ FL_pests_map <- map_FLpests2015 %>%
 FL_pests_map
 ```
 
+```{r save-map}
+ggsave("FL_pests_map.png", FL_pests_map,
+       width = 3.5, height = 4)
+ggsave("FL_pests_map.pdf", FL_pests_map,
+       width = 3.5, height = 4)
+```
+
 
 The above map shows the same information as the first visualization, but we are now able to recognize areas of Florida that may be difficult to distinguish in a list of county names. 
 
@@ -185,7 +193,10 @@ There is little to no pesticide use in the
 
 There is also very little use in the pan handle near Apalachicola National Forest. 
 
-Most of the pesticide use is in central to south-central Florida. Quite likely this map indicates the density of farmland in Florida counties. An interesting extension to would be to normalize the results by farmland acreage. 
+Most of the pesticide use is in central to south-central Florida. Quite likely this map indicates the density of farmland in Florida counties. Some interesting extensions would be to:
+
+- normalize the results by farmland acreage
+- include algae bloom data
 
 
 ## **Estimated impact of 13 factors on predicting heart disease**
