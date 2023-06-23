@@ -29,10 +29,10 @@ sample_n(weather_tpa, 4)
 ## # A tibble: 4 × 7
 ##    year month   day precipitation max_temp min_temp ave_temp
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl>
-## 1  2022     6    27          1.28       93       76     84.5
-## 2  2022     7    31          0          97       81     89  
-## 3  2022     3     6          0          89       66     77.5
-## 4  2022     2     2          0          82       57     69.5
+## 1  2022     2     3             0       85       66     75.5
+## 2  2022     2    21             0       86       63     74.5
+## 3  2022    10     3             0       84       66     75  
+## 4  2022     3    28             0       83       67     75
 ```
 
 See https://www.reisanar.com/slides/relationships-models#10 for a reminder on how to use this type of dataset with the `lubridate` package for dates and times (example included in the slides uses data from 2016).
@@ -56,11 +56,11 @@ tpa_month %>% sample_n(3)
 
 ```
 ## # A tibble: 3 × 8
-##    year month   day precipitation max_temp min_temp ave_temp Month   
-##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>   
-## 1  2022     6    12          0          90       77     83.5 June    
-## 2  2022     2    27          0          82       69     75.5 February
-## 3  2022     6    27          1.28       93       76     84.5 June
+##    year month   day precipitation max_temp min_temp ave_temp Month    
+##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>    
+## 1  2022     9    11          0.02       90       77     83.5 September
+## 2  2022     4    16          0          88       73     80.5 April    
+## 3  2022    12    24          0          45       31     38   December
 ```
 
 
@@ -274,11 +274,11 @@ tpa_doy %>% sample_n(5)
 ## # A tibble: 5 × 5
 ##   doy        precipitation max_temp min_temp ave_temp
 ##   <date>             <dbl>    <dbl>    <dbl>    <dbl>
-## 1 2022-04-13          0          86       70     78  
-## 2 2022-05-25          0          95       77     86  
-## 3 2022-05-26          0          92       78     85  
-## 4 2022-08-19          0          92       76     84  
-## 5 2022-08-27          0.02       92       79     85.5
+## 1 2022-08-14       0.00001       87       80     83.5
+## 2 2022-07-15       0             93       74     83.5
+## 3 2022-11-29       0             83       61     72  
+## 4 2022-06-15       0.11          95       78     86.5
+## 5 2022-10-10       0.00001       90       74     82
 ```
 
 
@@ -325,26 +325,6 @@ ggplot() +
 
 
 ## PART 2 
-
-> **You can choose to work on either Option (A) or Option (B)**. Remove from this template the option you decided not to work on. 
-
-
-### Option (A): Visualizing Text Data
-
-Review the set of slides (and additional resources linked in it) for visualizing text data: https://www.reisanar.com/slides/text-viz#1
-
-Choose any dataset with text data, and create at least one visualization with it. For example, you can create a frequency count of most used bigrams, a sentiment analysis of the text data, a network visualization of terms commonly used together, and/or a visualization of a topic modeling approach to the problem of identifying words/documents associated to different topics in the text data you decide to use. 
-
-Make sure to include a copy of the dataset in the `data/` folder, and reference your sources if different from the ones listed below:
-
-- [Billboard Top 100 Lyrics](https://github.com/reisanar/datasets/blob/master/BB_top100_2015.csv)
-
-- [RateMyProfessors comments](https://github.com/reisanar/datasets/blob/master/rmp_wit_comments.csv)
-
-- [FL Poly News Articles](https://github.com/reisanar/datasets/blob/master/flpoly_news_SP23.csv)
-
-
-(to get the "raw" data from any of the links listed above, simply click on the `raw` button of the GitHub page and copy the URL to be able to read it in your computer using the `read_csv()` function)
 
 
 ### Option (B): Data on Concrete Strength 
@@ -396,11 +376,11 @@ new_concrete %>% sample_n(5)
 ## # A tibble: 5 × 10
 ##   Cement Blast_Furnace_Slag Fly_Ash Water Superplasticizer Coarse_Aggregate
 ##    <dbl>              <dbl>   <dbl> <dbl>            <dbl>            <dbl>
-## 1   238.               159.     0    186.             0               1041.
-## 2   102                153      0    192              0                887 
-## 3   363.               189      0    165.            11.6              945.
-## 4   191.                 0    125.   162.             7.77            1090 
-## 5   290.                 0     96.2  168.             9.41             961.
+## 1   182.               45.2    122.  170.             8.19            1059.
+## 2   284               120.       0   168.             7.2              970.
+## 3   439               177        0   186             11.1              885.
+## 4   213.                0      100.  159.             8.71            1008.
+## 5   446                24       79   162             11.6              967 
 ## # ℹ 4 more variables: Fine_Aggregate <dbl>, Age <dbl>,
 ## #   Concrete_compressive_strength <dbl>, strength_range <fct>
 ```
@@ -408,7 +388,9 @@ new_concrete %>% sample_n(5)
 
 
 ```r
-new_concrete %>% select(-strength_range) %>% summarize_all(~range(.))
+new_concrete %>% 
+  select(-strength_range) %>% # remove categorical
+  summarize_all(~range(.))
 ```
 
 ```
@@ -422,9 +404,82 @@ new_concrete %>% select(-strength_range) %>% summarize_all(~range(.))
 ```
 
 
+```r
+new_concrete %>% summary()
+```
+
+```
+##      Cement      Blast_Furnace_Slag    Fly_Ash           Water      
+##  Min.   :102.0   Min.   :  0.0      Min.   :  0.00   Min.   :121.8  
+##  1st Qu.:192.4   1st Qu.:  0.0      1st Qu.:  0.00   1st Qu.:164.9  
+##  Median :272.9   Median : 22.0      Median :  0.00   Median :185.0  
+##  Mean   :281.2   Mean   : 73.9      Mean   : 54.19   Mean   :181.6  
+##  3rd Qu.:350.0   3rd Qu.:142.9      3rd Qu.:118.27   3rd Qu.:192.0  
+##  Max.   :540.0   Max.   :359.4      Max.   :200.10   Max.   :247.0  
+##  Superplasticizer Coarse_Aggregate Fine_Aggregate       Age        
+##  Min.   : 0.000   Min.   : 801.0   Min.   :594.0   Min.   :  1.00  
+##  1st Qu.: 0.000   1st Qu.: 932.0   1st Qu.:731.0   1st Qu.:  7.00  
+##  Median : 6.350   Median : 968.0   Median :779.5   Median : 28.00  
+##  Mean   : 6.203   Mean   : 972.9   Mean   :773.6   Mean   : 45.66  
+##  3rd Qu.:10.160   3rd Qu.:1029.4   3rd Qu.:824.0   3rd Qu.: 56.00  
+##  Max.   :32.200   Max.   :1145.0   Max.   :992.6   Max.   :365.00  
+##  Concrete_compressive_strength     strength_range
+##  Min.   : 2.332                (2.33,21]  :205   
+##  1st Qu.:23.707                (21,30.9]  :206   
+##  Median :34.443                (30.9,39]  :206   
+##  Mean   :35.818                (39,50.5]  :206   
+##  3rd Qu.:46.136                (50.5,82.6]:206   
+##  Max.   :82.599                NA's       :  1
+```
+
+
+```r
+new_concrete %>%
+  ggplot(aes(x = Fly_Ash)) +
+  geom_histogram()
+```
+
+```
+## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+![](lastname_project_03_files/figure-html/Fly-Ash-EDA-histogram-1.png)<!-- -->
+
+
+
+```r
+(new_concrete %>% filter(Fly_Ash == 0) %>% nrow()) / nrow(new_concrete)
+```
+
+```
+## [1] 0.5495146
+```
+
+```r
+# more than half of the Fly_Ash values are 0
+```
+
+
+
+```r
+new_concrete %>%
+  ggplot(aes(x = Age)) +
+  geom_histogram(binwidth = 5)
+```
+
+![](lastname_project_03_files/figure-html/Age-EDA-histogram-1.png)<!-- -->
+
+***Observations***
+
+> When summarizing (`summary()`) the concrete data, it was observed that the 1st quartile for three attributes is 0: Blast_Furnace_Slag, Fly_Ash, Superplasticizer. The media for Fly_Ash is also 0. Therefore, Fly_Ash was chosen as one of the continuous variables to explore the distribution of, to try to make more sense of this initial observation. From the histogram and the calculation following it, it was found that more than 50% of the Fly_Ash values are 0. 
+
+> From the `summary()`, we can see that the Age ranges from 1 to 365 (year). Age was chosen as the second attribute to explore to see if the tested ages are evenly spaced throughout the year. From the histogram, it is clear that most of the testing happens within the first month of aging. 
+
+
 2. Use a _temporal_ indicator such as the one available in the variable `Age` (measured in days). Generate a plot similar to the one shown below. Comment on your results.
 
 <img src="https://github.com/reisanar/figs/raw/master/concrete_strength.png" width="80%" style="display: block; margin: auto;" />
+
 
 
 3. Create a scatterplot similar to the one shown below. Pay special attention to which variables are being mapped to specific aesthetics of the plot. Comment on your results. 
