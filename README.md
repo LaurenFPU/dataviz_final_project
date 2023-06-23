@@ -20,8 +20,7 @@ The visualizations are:
 
 **Sample data visualization:** 
 
-_[include your favorite visualization from this project here]_
-<img src="https://github.com/reisanar/figs/raw/master/echarts.png" width="70%" height="70%">
+<img src=https://github.com/LaurenFPU/dataviz_final_project/blob/main/project-01/laurenFPU_project_01_files/figure-html/hd-fract-tot-obs-1.png" width="70%" height="70%">
 
 
 ## Project 02
@@ -43,19 +42,7 @@ Find the code and report in the `project_02/` folder.
 
 <img src="https://github.com/LaurenFPU/dataviz_final_project/blob/main/project-02/laurenFPU_project_02_files/figure-html/map-FLpests2015-1.png" width="70%" height="70%">
 
-From the above map, we can see that most of the pesticide use is in central to south-central Florida. Quite likely this map indicates the density of farmland in Florida counties. 
-
-There is little to no pesticide use in the 
-
-- Keys
-- Everglades
-
-There is also very little use in the pan handle near Apalachicola National Forest. 
-
-Some interesting extensions would be to:
-
-- normalize the results by farmland acreage
-- include algae bloom data
+Note: This map probably indicates the density of farmland in Florida counties. An interesting extension would be to normalize the results by farmland acreage.
 
 
 ## Project 03
@@ -71,9 +58,10 @@ The visualizations are:
 **Sample data visualization:** 
 
 _[include your favorite visualization from this project here]_
-<img src="https://github.com/reisanar/figs/raw/master/concrete_density.png" width="80%" height="80%">
+<img src="https://github.com/LaurenFPU/dataviz_final_project/blob/main/project-03/laurenFPU_project_03_files/figure-html/strength-cement-age-aggregate-scatter-1.png" width="80%" height="80%">
 
 
 ### Moving Forward
 
-_Please add here a short reflection on what you learned and what you plan to continue exploring in terms of data visualization, data storytelling, reproducible research, and/or related topics._
+A key takeaway from this class and project is that designing a chart can be a long process and require many iterations, tools, and internet searches. While I do not have much occasion to produce visualizations at work, at a minimum, I anticipate using the skills learned in this class in my free-time and for my own curiosity.
+

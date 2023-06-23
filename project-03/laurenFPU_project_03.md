@@ -29,10 +29,10 @@ sample_n(weather_tpa, 4)
 ## # A tibble: 4 × 7
 ##    year month   day precipitation max_temp min_temp ave_temp
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl>
-## 1  2022     3    20             0       84       65     74.5
-## 2  2022     1    29             0       55       41     48  
-## 3  2022     6    21             0       94       77     85.5
-## 4  2022    10    25             0       83       69     76
+## 1  2022     7     2       0.00001       91       80     85.5
+## 2  2022     9     7       0.1           91       78     84.5
+## 3  2022     1    15       0             75       50     62.5
+## 4  2022     1     6       0.00001       74       56     65
 ```
 
 See https://www.reisanar.com/slides/relationships-models#10 for a reminder on how to use this type of dataset with the `lubridate` package for dates and times (example included in the slides uses data from 2016).
@@ -58,9 +58,9 @@ tpa_month %>% sample_n(3)
 ## # A tibble: 3 × 8
 ##    year month   day precipitation max_temp min_temp ave_temp Month   
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>   
-## 1  2022    12    23       0.00001       70       42       56 December
-## 2  2022    11    17       0             69       53       61 November
-## 3  2022     4     2       1.11          83       65       74 April
+## 1  2022    12    22       0.15          69       59       64 December
+## 2  2022     7     4       0.00001       94       78       86 July    
+## 3  2022     8    15       0.00001       87       79       83 August
 ```
 
 
@@ -274,11 +274,11 @@ tpa_doy %>% sample_n(5)
 ## # A tibble: 5 × 5
 ##   doy        precipitation max_temp min_temp ave_temp
 ##   <date>             <dbl>    <dbl>    <dbl>    <dbl>
-## 1 2022-04-14          0          86       75     80.5
-## 2 2022-11-29          0          83       61     72  
-## 3 2022-11-09          0.09       76       67     71.5
-## 4 2022-12-20          0.11       67       58     62.5
-## 5 2022-07-23          1.69       94       77     85.5
+## 1 2022-12-26       0             55       38     46.5
+## 2 2022-12-20       0.11          67       58     62.5
+## 3 2022-07-04       0.00001       94       78     86  
+## 4 2022-01-30       0             58       36     47  
+## 5 2022-12-27       0             68       40     54
 ```
 
 
@@ -377,11 +377,11 @@ new_concrete %>% sample_n(5)
 ## # A tibble: 5 × 10
 ##   Cement Blast_Furnace_Slag Fly_Ash Water Superplasticizer Coarse_Aggregate
 ##    <dbl>              <dbl>   <dbl> <dbl>            <dbl>            <dbl>
-## 1   150                 237     0    174              12              1069 
-## 2   249.                  0    98.8  158.             12.8             988.
-## 3   310                   0     0    192               0               970 
-## 4   277.                  0    97.4  161.             11.8             974.
-## 5   281                   0     0    186               0              1104 
+## 1   313               145        0   127               8              1000 
+## 2   214.                0      174.  159.             11.7            1044.
+## 3   425               106.       0   151.             18.6             936 
+## 4   333                17.5    163   167              17.9             996 
+## 5   397                17.2    158   167              20.8             967 
 ## # ℹ 4 more variables: Fine_Aggregate <dbl>, Age <dbl>,
 ## #   Concrete_compressive_strength <dbl>, strength_range <fct>
 ```
@@ -636,3 +636,8 @@ new_concrete_plus %>%
 <img src="laurenFPU_project_03_files/figure-html/strength-cement-age-aggregate-scatter-1.png" width="80%" style="display: block; margin: auto;" />
 
 
+
+> ***Observations:***
+This is a busy plot to look at, so gleaning insights from it can be more difficult than from a simpler plot. But from the above, we can see that most concrete mixes that have relatively more coarse aggregate (higher aggregate ratios) generally use more cement. We can also see the relationship between age and compressive strength, as the left side of the plot is comprised of predominantly smaller points
+
+---

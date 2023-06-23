@@ -181,6 +181,8 @@ ggsave("FL_pests_map.png", FL_pests_map,
        width = 3.5, height = 4)
 ggsave("FL_pests_map.pdf", FL_pests_map,
        width = 3.5, height = 4)
+ggsave("FL_pests_map.jpg", FL_pests_map,
+       width = 3.5, height = 4)
 ```
 
 

@@ -397,3 +397,8 @@ new_concrete_plus %>%
 ```
 
 
+
+> ***Observations:***
+This is a busy plot to look at, so gleaning insights from it can be more difficult than from a simpler plot. But from the above, we can see that most concrete mixes that have relatively more coarse aggregate (higher aggregate ratios) generally use more cement. We can also see the relationship between age and compressive strength, as the left side of the plot is comprised of predominantly smaller points
+
+---
