@@ -41,7 +41,7 @@ Find the code and report in the `project_02/` folder.
 **Sample data visualization:** 
 
 
-<img src="https://github.com/LaurenFPU/dataviz_final_project/tree/main/figures/FL_pests_map.png" width="70%" height="70%">
+<img src="https://github.com/LaurenFPU/dataviz_final_project/blob/main/project-02/laurenFPU_project_02_files/figure-html/map-FLpests2015-1.png" width="70%" height="70%">
 
 From the above map, we can see that most of the pesticide use is in central to south-central Florida. Quite likely this map indicates the density of farmland in Florida counties. 
 
