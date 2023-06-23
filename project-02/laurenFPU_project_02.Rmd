@@ -9,4 +9,240 @@ output:
 
 # Data Visualization Project 02
 
-_revised version of mini-project 02 goes here_
+Two data sets (and a county shapesfile) were used to make the following visualizations:
+
+- [2015 Pesticide Use in U.S. Agriculture](https://www.kaggle.com/datasets/usgs/pesticide-use)
+  - Visualization 1 - **an interactive plot** (*2015 Estimated Pesticide Use by Florida County*)
+  - Visualization 2 - **a spatial visualization** (*2015 Estimated Pesticide Use by Florida County*)
+- [Statlog heart disease dataset](https://www.kaggle.com/datasets/shubamsumbria/statlog-heart-data-set)
+  - Visualization 3 - **coefficients of a linear model** (*Estimated impact of 13 factors on predicting heart disease*)
+  
+The Statlog dataset was originally accessed through the [UCI repository](https://archive.ics.uci.edu/ml/datasets/statlog+(heart)). It currently appears to be broken/missing. The first (Kaggle) link above for the *Statlog heart disease dataset* does currently work.
+
+## **2015 Estimated Pesticide Use by Florida County**
+
+### ***an interactive plot***
+
+The below plot is static and has been reduced in size. For a larger and interactive version, click [here](FL_pests_interactive.html). 
+
+
+```{r project-2-setup, echo=FALSE, message=FALSE}
+# load packages
+library(tidyverse)
+library(sf)
+library(plotly)
+library(broom)
+library(dplyr)
+
+# load data - pesticides
+county_shapes <- read_sf("../data/cb_2018_us_county_20m/cb_2018_us_county_20m.shp")
+pests_15 <- read_csv("../data/pesticides-data/2015.csv")
+pests_dd <- read_csv("../data/pesticides-data/dictionary.csv")
+# join pests_15 with data dictionary
+pests2015 <- full_join(pests_15, pests_dd)
+
+# load data - heart
+heart_cols <- c("age", "sex", "cp_type", "rest_bp", "chol", 
+                 "fast_bs", "rest_ecg", "max_hr", "exc_ang", 
+                 "oldpeak", "slope", "no_mj", "thal", "num")
+heart <- read_table("../data/heart.csv", col_names = heart_cols)
+
+# set theme
+theme_set(theme_minimal())
+```
+
+```{r format-data, message=FALSE, echo=FALSE}
+# heart - long column name version
+heart_longcols <- c("age", "sex", "chest pain type", "resting blood pressure", 
+                    "serum cholesterol", "fasting blood sugar", "resting ecg",
+                    "maximum heart rate", "exercise induced angina", "oldpeak",
+                    "ST segment slope", "# of vessels colored by fluoroscopy", 
+                    "thallasemia", "num")
+heart2 <- read_table("../data/heart.csv", col_names = heart_longcols)
+
+# pests - FL only
+FL_15 <- pests2015 %>% filter(STATE_CODE == 12) 
+FL_15 <- FL_15 %>% mutate(County = sub(FL_15$COUNTY, 
+                            pattern = " [[:alpha:]]*$", replacement = ""))
+
+# FL pests - total all pesticides per county
+small_FL_15 <- FL_15 %>%
+  group_by(County) %>%
+  summarize(`high estimate` = sum(HIGH_ESTIMATE)) %>%
+  arrange(desc(`high estimate`))
+
+# counties with highest pesticide use
+top_FL <- small_FL_15 %>%
+  group_by(County) %>%
+  summarize(`high estimate` = sum(`high estimate`)) %>%
+  arrange(desc(`high estimate`)) %>%
+  slice(1:20)
+
+# counties with lowest pesticide use
+bottom_FL <- small_FL_15 %>%
+  group_by(County) %>%
+  summarize(`high estimate` = sum(`high estimate`)) %>%
+  arrange((`high estimate`)) %>%
+  slice(1:20)
+
+```
+
+
+```{r FL-small-pests, include=FALSE}
+FL_small_pests_plotly <- small_FL_15 %>%
+  ggplot(aes(x = reorder(County, `high estimate`), y = `high estimate`)) +
+  geom_point() +
+  geom_point(data = top_FL, color = "red") +
+  geom_point(data = bottom_FL, color = "blue") +
+  annotate(geom = "text",
+           x = 62, y = 100000,
+           hjust = 0, vjust = 0, 
+           lineheight = 1, size = 3,
+           color = "red", fontface = 2,
+           label = "Top 5 Agricultural Counties\n(based on 2017 market\nvalues from fdacs.gov):\n- Palm Beach\n- Miami-Dade\n- Hillsborough\n- Manatee\n- Hendry)") +
+  annotate(geom = "text",
+           x = 10, y = 10,
+           hjust = 0, vjust = 0, 
+           lineheight = 1, size = 3,
+           color = "blue", fontface = 2,
+           label = "Bottom 5 Agricultural Counties\n(based on 2017 market\nvalues from fdacs.gov):\n- Wakulla\n- Liberty\n- Gulf\n- Pinellas\n- Franklin)") +
+  scale_y_log10(labels = scales::comma) +
+  labs(title = "2015 Estimated Pesticide Use by Florida County",
+       subtitle = "Source: https://www.kaggle.com/datasets/usgs/pesticide-use",
+       x = "County",
+       caption = "Source: https://www.kaggle.com/datasets/usgs/pesticide-use /n fdacs.gov") +
+  coord_flip() +
+  theme(plot.title.position = "plot")
+
+FL_small_pests_plotly
+```
+
+```{r FL-small-pests-plotly, echo=FALSE}
+FL_pests_interactive <- FL_small_pests_plotly %>% ggplotly(autosize = F, width = 900, height = 800)
+
+```
+
+![](FL_pest_interactive.png){width=675px, height=600px}
+
+The above plot shows the estimated total pesticide use by Florida counties in 2015. The top 20 counties are in red and the bottom in blue. Unsurprisingly, highly agricultural counties use more pesticides than others. This was confirmed by referencing the 2017 agricultural market values from the [Florida Department of Agriculture and Consumer Services](https://www.fdacs.gov/Agriculture-Industry/Florida-Agriculture-Overview-and-Statistics).
+
+### ***a spatial visualization***
+
+```{r prep-spatial-viz-data, message=FALSE, echo=FALSE}
+# total by county
+total_by_FLcounty<- pests2015 %>%
+  filter(STATE == "FL") %>%
+  group_by(COUNTY) %>%
+  summarize(all_pests = sum(HIGH_ESTIMATE))
+
+# add total by county data to pests2015
+FLpests2015 <- pests2015 %>%
+  filter(STATE == "FL") %>%
+  full_join(total_by_FLcounty) %>%
+  arrange(COUNTY)
+
+# rename state county columns
+FLpests2015 <- FLpests2015 %>% rename(STATEFP = STATE_CODE, COUNTYFP = COUNTY_CODE)
+
+# join with shapefile
+map_FLpests2015 <- right_join(county_shapes, FLpests2015)
+```
+
+```{r map-FLpests2015, echo=FALSE, out.width="80%", fig.asp=1, dpi=300}
+FL_pests_map <- map_FLpests2015 %>%
+  ggplot() +
+  geom_sf(aes(fill = all_pests)) +
+  scale_fill_viridis_c(trans = "log10", labels = scales::comma) +
+  labs(title = "2015 Estimated Pesticide Use by Florida County",
+       caption = "Source: https://www.kaggle.com/datasets/usgs/pesticide-use",
+       subtitle = "(note: units of measure not indicated by data source)",
+       fill = "Total Pesticides") +
+  theme(plot.title = element_text(size = 15),
+        plot.caption = element_text(size = 10),
+        plot.subtitle = element_text(size = 13),
+        legend.position = c(0.35, 0.4),
+        axis.text = element_blank(),
+        panel.grid = element_blank(),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 13),
+        legend.key.size = unit(1,"cm"))
+
+FL_pests_map
+```
+
+
+The above map shows the same information as the first visualization, but we are now able to recognize areas of Florida that may be difficult to distinguish in a list of county names. 
+
+There is little to no pesticide use in the 
+
+- Keys
+- Everglades
+
+There is also very little use in the pan handle near Apalachicola National Forest. 
+
+Most of the pesticide use is in central to south-central Florida. Quite likely this map indicates the density of farmland in Florida counties. An interesting extension to would be to normalize the results by farmland acreage. 
+
+
+## **Estimated impact of 13 factors on predicting heart disease**
+
+### ***Modeling Heart Disease*** - predictor significance
+
+
+```{r simple-linear-model, echo=FALSE}
+# simple linear model
+heart_model <- lm(num ~ ., data = heart2)
+
+# model coefficients
+heart_coefs <- tidy(heart_model, conf.int = TRUE) %>%
+  filter(term != "(Intercept)")
+```
+
+```{r heart-coefs-plot, echo=FALSE, out.width="60%", fig.asp=0.8, dpi=300}
+heart_coefs_plot <- heart_coefs %>%
+  ggplot(aes(x = estimate, y = fct_reorder(term, estimate))) +
+  geom_pointrange(aes(xmin = conf.low, xmax = conf.high)) + 
+  geom_vline(xintercept = 0, 
+             color = "blue") +
+  geom_pointrange(data = filter(heart_coefs, abs(estimate) > 0.075), 
+                  aes(xmin = conf.low, xmax = conf.high),
+                  color = "purple") +
+  labs(title = "Estimated impact of 13 factors on predicting heart disease",
+       subtitle = "(coefficient estimates from a simple linear model)",
+       caption = "Source: Statlog, UCI Repository") +
+  theme(plot.title.position = "plot",
+        plot.title = element_text(size = 15),
+        plot.subtitle = element_text(size = 14),
+        plot.caption = element_text(size = 10),
+        axis.text.y = element_text(size = 15),
+        axis.text.x = element_text(size = 14),
+        axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        panel.grid.major = element_line(linewidth = 0.1),
+        panel.grid.minor = element_blank())
+
+heart_coefs_plot
+```
+
+
+For the third visualization, the Statlog Heart Disease data set was used (the same data set used in mini-project 1). A linear model was made to predict heart disease (positive versus negative) using all thirteen available predictors. In the above coefficients plot, we see that 
+
+- sex,
+- number of vessels colored by fluoroscopy,
+- exercise induced angina,
+- chest pain type,
+- and fasting blood sugar
+
+are the most significant predictors. 
+
+Interestingly, 
+
+- resting blood pressure,
+- serum cholesterol,
+- age,
+- and maximum heart rate
+
+appear to have very little predictive power. 
+
+The linear model created was very simple and is not recommended for prediction purposes. However, the coefficients plot can be used in additional analysis and feature selection. 
+
+---
