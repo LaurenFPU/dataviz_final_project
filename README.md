@@ -20,7 +20,7 @@ The visualizations are:
 
 **Sample data visualization:** 
 
-<img src=https://github.com/LaurenFPU/dataviz_final_project/blob/main/project-01/laurenFPU_project_01_files/figure-html/hd-fract-tot-obs-1.png" width="70%" height="70%">
+<img src="https://github.com/LaurenFPU/dataviz_final_project/blob/main/project-01/laurenFPU_project_01_files/figure-html/hd-fract-tot-obs-1.png" width="70%" height="70%">
 
 
 ## Project 02
@@ -57,7 +57,6 @@ The visualizations are:
 
 **Sample data visualization:** 
 
-_[include your favorite visualization from this project here]_
 <img src="https://github.com/LaurenFPU/dataviz_final_project/blob/main/project-03/laurenFPU_project_03_files/figure-html/strength-cement-age-aggregate-scatter-1.png" width="80%" height="80%">
 
 

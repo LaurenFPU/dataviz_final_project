@@ -123,7 +123,7 @@ FL_pests_interactive <- FL_small_pests_plotly %>% ggplotly(autosize = F, width =
 
 ![](FL_pest_interactive.png){width=675px, height=600px}
 
-```{r}
+```{r, echo=FALSE}
 FL_pests_interactive
 ```
 
@@ -159,7 +159,7 @@ FL_pests_map <- map_FLpests2015 %>%
   ggplot() +
   geom_sf(aes(fill = all_pests)) +
   scale_fill_viridis_c(trans = "log10", labels = scales::comma) +
-  labs(title = "2015 Estimated Pesticide in kilograms",
+  labs(title = "2015 Estimated Pesticide Use in kilograms",
        caption = "Source: https://www.kaggle.com/datasets/usgs/pesticide-use",
        subtitle = "by Florida County",
        fill = "Total Pesticides") +
@@ -176,7 +176,7 @@ FL_pests_map <- map_FLpests2015 %>%
 FL_pests_map
 ```
 
-```{r save-map}
+```{r save-map, include=FALSE}
 ggsave("FL_pests_map.png", FL_pests_map,
        width = 3.5, height = 4)
 ggsave("FL_pests_map.pdf", FL_pests_map,
