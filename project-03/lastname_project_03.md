@@ -29,10 +29,10 @@ sample_n(weather_tpa, 4)
 ## # A tibble: 4 × 7
 ##    year month   day precipitation max_temp min_temp ave_temp
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl>
-## 1  2022     1    16          0.68       71       62     66.5
-## 2  2022     6    28          0.09       95       77     86  
-## 3  2022     9    10          1.09       87       76     81.5
-## 4  2022     1     1          0          82       67     74.5
+## 1  2022     1    24          0          63       40     51.5
+## 2  2022     5    20          0.17       88       75     81.5
+## 3  2022     9    15          0          91       75     83  
+## 4  2022    10    15          0          88       74     81
 ```
 
 See https://www.reisanar.com/slides/relationships-models#10 for a reminder on how to use this type of dataset with the `lubridate` package for dates and times (example included in the slides uses data from 2016).
@@ -56,11 +56,11 @@ tpa_month %>% sample_n(3)
 
 ```
 ## # A tibble: 3 × 8
-##    year month   day precipitation max_temp min_temp ave_temp Month 
-##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord> 
-## 1  2022     7    29          0          97       82     89.5 July  
-## 2  2022     7     9          0          92       81     86.5 July  
-## 3  2022     8     4          1.24       95       76     85.5 August
+##    year month   day precipitation max_temp min_temp ave_temp Month   
+##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>   
+## 1  2022    12    10       0             80       62       71 December
+## 2  2022     3    10       0.00001       84       72       78 March   
+## 3  2022     8    12       0             92       80       86 August
 ```
 
 
@@ -274,11 +274,11 @@ tpa_doy %>% sample_n(5)
 ## # A tibble: 5 × 5
 ##   doy        precipitation max_temp min_temp ave_temp
 ##   <date>             <dbl>    <dbl>    <dbl>    <dbl>
-## 1 2022-03-02          0          78       58     68  
-## 2 2022-04-11          0          85       62     73.5
-## 3 2022-11-19          0          75       53     64  
-## 4 2022-03-15          1.04       84       67     75.5
-## 5 2022-05-12          0          87       66     76.5
+## 1 2022-01-29          0          55       41     48  
+## 2 2022-12-22          0.15       69       59     64  
+## 3 2022-11-17          0          69       53     61  
+## 4 2022-12-17          0.02       70       54     62  
+## 5 2022-11-10          2.46       74       67     70.5
 ```
 
 
@@ -377,11 +377,11 @@ new_concrete %>% sample_n(5)
 ## # A tibble: 5 × 10
 ##   Cement Blast_Furnace_Slag Fly_Ash Water Superplasticizer Coarse_Aggregate
 ##    <dbl>              <dbl>   <dbl> <dbl>            <dbl>            <dbl>
-## 1   238.              238.      0    228              0                932 
-## 2   250                 0      95.7  192.             5.33             949.
-## 3   428.               47.5     0    228              0                932 
-## 4   255                 0       0    192              0                890.
-## 5   475                 0       0    228              0                932 
+## 1   184.               123.      0   204.              0               959.
+## 2   302                  0       0   203               0               974 
+## 3   219.                 0     124.  158.             11.3            1079.
+## 4   307                  0       0   193               0               968 
+## 5   331                  0       0   192               0              1025 
 ## # ℹ 4 more variables: Fine_Aggregate <dbl>, Age <dbl>,
 ## #   Concrete_compressive_strength <dbl>, strength_range <fct>
 ```
@@ -579,7 +579,7 @@ newer_concrete %>%
         legend.position = "bottom")
 ```
 
-<img src="lastname_project_03_files/figure-html/age-strength-cement-boxplot-1.png" width="95%" style="display: block; margin: auto;" />
+<img src="lastname_project_03_files/figure-html/age-strength-cement-boxplot-1.png" width="90%" style="display: block; margin: auto;" />
 > ***Observations:***
 For all of the facets (all cement contents), greater age is generally associated with stronger concrete; however, there are diminishing returns that level off after the first couple months of aging. While it is redundant to color code the compressive strength ranges, this makes it easier to see that larger amounts of cement appear to be associated with greater compressive strengths overall. The highest compressive strengths are seen in the bottom right facet, for which the cement content is the highest. After three months of aging, all boxplots for this cement range show compressive strengths above 40 MPa.
 
@@ -590,5 +590,49 @@ For all of the facets (all cement contents), greater age is generally associated
 <img src="https://github.com/reisanar/figs/raw/master/cement_plot.png" width="80%" style="display: block; margin: auto;" />
 
 
+```r
+concrete %>% head()
+```
+
+```
+## # A tibble: 6 × 9
+##   Cement Blast_Furnace_Slag Fly_Ash Water Superplasticizer Coarse_Aggregate
+##    <dbl>              <dbl>   <dbl> <dbl>            <dbl>            <dbl>
+## 1   540                  0        0   162              2.5            1040 
+## 2   540                  0        0   162              2.5            1055 
+## 3   332.               142.       0   228              0               932 
+## 4   332.               142.       0   228              0               932 
+## 5   199.               132.       0   192              0               978.
+## 6   266                114        0   228              0               932 
+## # ℹ 3 more variables: Fine_Aggregate <dbl>, Age <dbl>,
+## #   Concrete_compressive_strength <dbl>
+```
+
+
+```r
+new_concrete_plus <- new_concrete %>%
+  mutate(Coarse_to_Fine = Coarse_Aggregate / Fine_Aggregate)
+```
+
+
+
+```r
+theme_set(theme_minimal())
+
+new_concrete_plus %>%
+  ggplot() +
+  geom_point(aes(x = Concrete_compressive_strength, y = Cement, color = Coarse_to_Fine, size = Age), alpha = 0.5) +
+  scale_color_viridis_c() +
+  labs(title = "Concrete strength versus Cement content, age, and aggregate content",
+       subtitle = "(Aggregate ratio = kg coarse aggregate / kg fine aggregate)",
+       y = "Cement (kg)", 
+       x = "Concrete compressive strength (MPa)", 
+       caption = "Source: https://archive.ics.uci.edu/ml/index.php",
+       size = "Age (days)",
+       color = "Aggregate ratio") +
+  theme(plot.title.position = "plot")
+```
+
+<img src="lastname_project_03_files/figure-html/strength-cement-age-aggregate-scatter-1.png" width="80%" style="display: block; margin: auto;" />
 
 

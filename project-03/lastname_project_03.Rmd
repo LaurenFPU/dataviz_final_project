@@ -335,7 +335,7 @@ head(newer_concrete)
 ```
 
 
-```{r age-strength-cement-boxplot, out.width="95%", fig.align='center', fig.asp=1, dpi=300}
+```{r age-strength-cement-boxplot, out.width="90%", fig.align='center', fig.asp=1, dpi=300}
 library(viridis)
 
 theme_set(theme_minimal())
@@ -369,6 +369,31 @@ For all of the facets (all cement contents), greater age is generally associated
 knitr::include_graphics("https://github.com/reisanar/figs/raw/master/cement_plot.png")
 ```
 
+```{r}
+concrete %>% head()
+```
 
+```{r new-concrete-plus-df}
+new_concrete_plus <- new_concrete %>%
+  mutate(Coarse_to_Fine = Coarse_Aggregate / Fine_Aggregate)
+```
+
+
+```{r strength-cement-age-aggregate-scatter, out.width="80%", fig.align='center', fig.asp=1, dpi=300}
+theme_set(theme_minimal())
+
+new_concrete_plus %>%
+  ggplot() +
+  geom_point(aes(x = Concrete_compressive_strength, y = Cement, color = Coarse_to_Fine, size = Age), alpha = 0.5) +
+  scale_color_viridis_c() +
+  labs(title = "Concrete strength versus Cement content, age, and aggregate content",
+       subtitle = "(Aggregate ratio = kg coarse aggregate / kg fine aggregate)",
+       y = "Cement (kg)", 
+       x = "Concrete compressive strength (MPa)", 
+       caption = "Source: https://archive.ics.uci.edu/ml/index.php",
+       size = "Age (days)",
+       color = "Aggregate ratio") +
+  theme(plot.title.position = "plot")
+```
 
 
