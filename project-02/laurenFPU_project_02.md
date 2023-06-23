@@ -43,7 +43,7 @@ The above plot shows the estimated total pesticide use by Florida counties in 20
 
 
 
-<img src="laurenFPU_project_02_files/figure-html/map-FLpests2015-1.png" width="80%" />
+<img src="laurenFPU_project_02_files/figure-html/map-FLpests2015-1.png" width="70%" />
 
 
 The above map shows the same information as the first visualization, but we are now able to recognize areas of Florida that may be difficult to distinguish in a list of county names. 

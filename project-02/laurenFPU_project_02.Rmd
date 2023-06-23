@@ -148,7 +148,7 @@ FLpests2015 <- FLpests2015 %>% rename(STATEFP = STATE_CODE, COUNTYFP = COUNTY_CO
 map_FLpests2015 <- right_join(county_shapes, FLpests2015)
 ```
 
-```{r map-FLpests2015, echo=FALSE, out.width="80%", fig.asp=1, dpi=300}
+```{r map-FLpests2015, echo=FALSE, out.width="70%", fig.asp=1, dpi=300}
 FL_pests_map <- map_FLpests2015 %>%
   ggplot() +
   geom_sf(aes(fill = all_pests)) +
