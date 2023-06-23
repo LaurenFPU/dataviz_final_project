@@ -29,10 +29,10 @@ sample_n(weather_tpa, 4)
 ## # A tibble: 4 × 7
 ##    year month   day precipitation max_temp min_temp ave_temp
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl>
-## 1  2022     1    24          0          63       40     51.5
-## 2  2022     5    20          0.17       88       75     81.5
-## 3  2022     9    15          0          91       75     83  
-## 4  2022    10    15          0          88       74     81
+## 1  2022     3    20             0       84       65     74.5
+## 2  2022     1    29             0       55       41     48  
+## 3  2022     6    21             0       94       77     85.5
+## 4  2022    10    25             0       83       69     76
 ```
 
 See https://www.reisanar.com/slides/relationships-models#10 for a reminder on how to use this type of dataset with the `lubridate` package for dates and times (example included in the slides uses data from 2016).
@@ -58,9 +58,9 @@ tpa_month %>% sample_n(3)
 ## # A tibble: 3 × 8
 ##    year month   day precipitation max_temp min_temp ave_temp Month   
 ##   <dbl> <dbl> <dbl>         <dbl>    <dbl>    <dbl>    <dbl> <ord>   
-## 1  2022    12    10       0             80       62       71 December
-## 2  2022     3    10       0.00001       84       72       78 March   
-## 3  2022     8    12       0             92       80       86 August
+## 1  2022    12    23       0.00001       70       42       56 December
+## 2  2022    11    17       0             69       53       61 November
+## 3  2022     4     2       1.11          83       65       74 April
 ```
 
 
@@ -86,7 +86,7 @@ tpa_month %>%
         panel.grid = element_line(linewidth = 1))
 ```
 
-<img src="lastname_project_03_files/figure-html/tpa_month_hist-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="laurenFPU_project_03_files/figure-html/tpa_month_hist-1.png" width="80%" style="display: block; margin: auto;" />
 
 
 (b) Create a plot like the one below:
@@ -120,7 +120,7 @@ weather_tpa %>%
 ## generated.
 ```
 
-<img src="lastname_project_03_files/figure-html/density-plot-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="laurenFPU_project_03_files/figure-html/density-plot-1.png" width="80%" style="display: block; margin: auto;" />
 
 
 (c) Create a plot like the one below:
@@ -151,7 +151,7 @@ tpa_month %>%
         panel.grid = element_line(linewidth = 1))
 ```
 
-<img src="lastname_project_03_files/figure-html/density-monthly-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="laurenFPU_project_03_files/figure-html/density-monthly-1.png" width="80%" style="display: block; margin: auto;" />
 
 
 (d) Generate a plot like the chart below:
@@ -202,7 +202,7 @@ tpa_month %>%
 ## generated.
 ```
 
-<img src="lastname_project_03_files/figure-html/ridges-monthly-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="laurenFPU_project_03_files/figure-html/ridges-monthly-1.png" width="80%" style="display: block; margin: auto;" />
 
 
 
@@ -274,11 +274,11 @@ tpa_doy %>% sample_n(5)
 ## # A tibble: 5 × 5
 ##   doy        precipitation max_temp min_temp ave_temp
 ##   <date>             <dbl>    <dbl>    <dbl>    <dbl>
-## 1 2022-01-29          0          55       41     48  
-## 2 2022-12-22          0.15       69       59     64  
-## 3 2022-11-17          0          69       53     61  
-## 4 2022-12-17          0.02       70       54     62  
-## 5 2022-11-10          2.46       74       67     70.5
+## 1 2022-04-14          0          86       75     80.5
+## 2 2022-11-29          0          83       61     72  
+## 3 2022-11-09          0.09       76       67     71.5
+## 4 2022-12-20          0.11       67       58     62.5
+## 5 2022-07-23          1.69       94       77     85.5
 ```
 
 
@@ -319,7 +319,7 @@ ggplot() +
         panel.grid = element_line(linewidth = 0.25))
 ```
 
-<img src="lastname_project_03_files/figure-html/monthly-precipitation-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="laurenFPU_project_03_files/figure-html/monthly-precipitation-1.png" width="80%" style="display: block; margin: auto;" />
 
 
 
@@ -377,11 +377,11 @@ new_concrete %>% sample_n(5)
 ## # A tibble: 5 × 10
 ##   Cement Blast_Furnace_Slag Fly_Ash Water Superplasticizer Coarse_Aggregate
 ##    <dbl>              <dbl>   <dbl> <dbl>            <dbl>            <dbl>
-## 1   184.               123.      0   204.              0               959.
-## 2   302                  0       0   203               0               974 
-## 3   219.                 0     124.  158.             11.3            1079.
-## 4   307                  0       0   193               0               968 
-## 5   331                  0       0   192               0              1025 
+## 1   150                 237     0    174              12              1069 
+## 2   249.                  0    98.8  158.             12.8             988.
+## 3   310                   0     0    192               0               970 
+## 4   277.                  0    97.4  161.             11.8             974.
+## 5   281                   0     0    186               0              1104 
 ## # ℹ 4 more variables: Fine_Aggregate <dbl>, Age <dbl>,
 ## #   Concrete_compressive_strength <dbl>, strength_range <fct>
 ```
@@ -444,7 +444,7 @@ new_concrete %>%
 ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 ```
 
-![](lastname_project_03_files/figure-html/Fly-Ash-EDA-histogram-1.png)<!-- -->
+![](laurenFPU_project_03_files/figure-html/Fly-Ash-EDA-histogram-1.png)<!-- -->
 
 
 
@@ -468,7 +468,7 @@ new_concrete %>%
   geom_histogram(binwidth = 5)
 ```
 
-![](lastname_project_03_files/figure-html/Age-EDA-histogram-1.png)<!-- -->
+![](laurenFPU_project_03_files/figure-html/Age-EDA-histogram-1.png)<!-- -->
 
 ***Observations***
 
@@ -579,7 +579,7 @@ newer_concrete %>%
         legend.position = "bottom")
 ```
 
-<img src="lastname_project_03_files/figure-html/age-strength-cement-boxplot-1.png" width="90%" style="display: block; margin: auto;" />
+<img src="laurenFPU_project_03_files/figure-html/age-strength-cement-boxplot-1.png" width="90%" style="display: block; margin: auto;" />
 > ***Observations:***
 For all of the facets (all cement contents), greater age is generally associated with stronger concrete; however, there are diminishing returns that level off after the first couple months of aging. While it is redundant to color code the compressive strength ranges, this makes it easier to see that larger amounts of cement appear to be associated with greater compressive strengths overall. The highest compressive strengths are seen in the bottom right facet, for which the cement content is the highest. After three months of aging, all boxplots for this cement range show compressive strengths above 40 MPa.
 
@@ -633,6 +633,6 @@ new_concrete_plus %>%
   theme(plot.title.position = "plot")
 ```
 
-<img src="lastname_project_03_files/figure-html/strength-cement-age-aggregate-scatter-1.png" width="80%" style="display: block; margin: auto;" />
+<img src="laurenFPU_project_03_files/figure-html/strength-cement-age-aggregate-scatter-1.png" width="80%" style="display: block; margin: auto;" />
 
 

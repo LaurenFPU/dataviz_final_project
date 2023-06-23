@@ -25,6 +25,12 @@ The Statlog dataset was originally accessed through the [UCI repository](https:/
 
 The below plot is static and has been reduced in size. For a larger and interactive version, click [here](FL_pests_interactive.html). 
 
+```{r}
+FL_pests_interactive
+```
+
+
+> Note: The above link works offline but does not render correctly in GitHub. 
 
 ```{r project-2-setup, echo=FALSE, message=FALSE}
 # load packages
@@ -117,9 +123,8 @@ FL_small_pests_plotly <- small_FL_15 %>%
 FL_small_pests_plotly
 ```
 
-```{r FL-small-pests-plotly, echo=FALSE}
+```{r FL-small-pests-plotly, echo=FALSE, warning=FALSE}
 FL_pests_interactive <- FL_small_pests_plotly %>% ggplotly(autosize = F, width = 900, height = 800)
-
 ```
 
 ![](FL_pest_interactive.png){width=675px, height=600px}
@@ -153,9 +158,9 @@ FL_pests_map <- map_FLpests2015 %>%
   ggplot() +
   geom_sf(aes(fill = all_pests)) +
   scale_fill_viridis_c(trans = "log10", labels = scales::comma) +
-  labs(title = "2015 Estimated Pesticide Use by Florida County",
+  labs(title = "2015 Estimated Pesticide in kilograms",
        caption = "Source: https://www.kaggle.com/datasets/usgs/pesticide-use",
-       subtitle = "(note: units of measure not indicated by data source)",
+       subtitle = "by Florida County",
        fill = "Total Pesticides") +
   theme(plot.title = element_text(size = 15),
         plot.caption = element_text(size = 10),
